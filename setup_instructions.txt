@@ -1,0 +1,59 @@
+XLM ARBITRAGE BOT - QUICK SETUP GUIDE
+======================================
+
+STEP 1: Install Dependencies
+-----------------------------
+pip install -r requirements.txt
+
+STEP 2: Create Your Configuration File
+---------------------------------------
+Create a file named '.env' in this directory with the following content:
+
+BINANCE_API_KEY=your_actual_binance_api_key
+BINANCE_API_SECRET=your_actual_binance_secret
+KRAKEN_API_KEY=your_actual_kraken_api_key
+KRAKEN_API_SECRET=your_actual_kraken_secret
+MIN_PROFIT_PERCENTAGE=0.5
+CHECK_INTERVAL_SECONDS=5
+TRADE_AMOUNT_USD=100
+DRY_RUN=true
+
+STEP 3: Get API Keys
+--------------------
+BINANCE.US:
+- Go to https://www.binance.us/en/usercenter/settings/api-management
+- Create new API key
+- Enable "Spot & Margin Trading" permission
+- Whitelist your IP address
+
+KRAKEN:
+- Go to https://www.kraken.com/u/security/api
+- Generate new API key
+- Enable: Query Funds, Query Orders, Create & Modify Orders
+
+STEP 4: Test in Dry Run Mode
+-----------------------------
+python arbitrage_bot.py
+
+Watch the output. The bot will show:
+- Current prices on both exchanges
+- Any arbitrage opportunities found
+- Simulated trades (no real money used)
+
+STEP 5: Go Live (Only After Thorough Testing)
+----------------------------------------------
+1. Edit .env file
+2. Set DRY_RUN=false
+3. Start with small TRADE_AMOUNT_USD (e.g., 50)
+4. Run: python arbitrage_bot.py
+
+IMPORTANT NOTES:
+----------------
+- You need funds on BOTH exchanges
+- Start with DRY_RUN=true to test
+- Arbitrage opportunities are rare
+- Trading fees significantly impact profitability
+- Use at your own risk!
+
+To stop the bot: Press Ctrl+C
+
