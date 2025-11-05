@@ -23,7 +23,7 @@ class Config:
     DRY_RUN = os.getenv('DRY_RUN', 'true').lower() == 'true'
     
     # Trading Pairs
-    SYMBOL = 'XLM'
+    SYMBOLS = ['XLM', 'XRP']  # Monitor multiple coins
     QUOTE_CURRENCIES = ['USDT', 'USD']
     
     # Exchange Settings

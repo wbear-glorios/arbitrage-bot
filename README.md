@@ -1,13 +1,14 @@
-# XLM Arbitrage Bot for Binance and Kraken
+# Crypto Arbitrage Bot for Binance and Kraken
 
-A sophisticated cryptocurrency arbitrage bot designed to detect and execute profitable trading opportunities for Stellar Lumens (XLM) between Binance.US and Kraken exchanges in the US region.
+A sophisticated cryptocurrency arbitrage bot designed to detect and execute profitable trading opportunities for **XLM (Stellar Lumens)** and **XRP (Ripple)** between Binance.US and Kraken exchanges in the US region.
 
 ## 🚀 Features
 
-- **Multi-Exchange Support**: Monitors Binance.US and Kraken simultaneously
-- **Real-Time Price Monitoring**: Fetches live price data from both exchanges
-- **Intelligent Arbitrage Detection**: Identifies profitable price differences
+- **Multi-Coin Support**: Monitors XLM and XRP simultaneously
+- **Multi-Exchange Support**: Monitors Binance.US and Kraken in real-time
+- **Intelligent Arbitrage Detection**: Identifies profitable price differences across all pairs
 - **Automated Trading**: Executes trades automatically when opportunities arise
+- **Smart Opportunity Ranking**: Automatically selects the most profitable trade
 - **Dry Run Mode**: Test the bot without risking real funds
 - **Comprehensive Logging**: Console and file logging with color-coded output
 - **Fee Calculation**: Accounts for trading fees in profit calculations
@@ -124,9 +125,9 @@ Press `Ctrl+C` to gracefully stop the bot. It will display final statistics befo
 
 ```
 ============================================================
-XLM Arbitrage Bot Initializing...
+Crypto Arbitrage Bot Initializing...
 ============================================================
-Symbol: XLM
+Symbols: XLM, XRP
 Quote Currencies: USDT, USD
 Min Profit: 0.5%
 Trade Amount: $100
@@ -138,24 +139,41 @@ Initializing exchange connections...
 ✓ Kraken connected
 ✓ Successfully connected to 2 exchanges
 
-────────────────────────────────────────────────────────────
+════════════════════════════════════════════════════════════
 Iteration #1 | 2025-11-05 14:30:00
-────────────────────────────────────────────────────────────
+════════════════════════════════════════════════════════════
+
+─────────────── XLM ───────────────
 BINANCE    | Bid: $0.124500 | Ask: $0.124800 | Last: $0.124650
 KRAKEN     | Bid: $0.125200 | Ask: $0.125500 | Last: $0.125350
+✓ Found 1 opportunity(ies) for XLM
 
+─────────────── XRP ───────────────
+BINANCE    | Bid: $2.134500 | Ask: $2.135800 | Last: $2.135150
+KRAKEN     | Bid: $2.142200 | Ask: $2.143500 | Last: $2.142850
+✓ Found 1 opportunity(ies) for XRP
+
+🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯
+TOTAL OPPORTUNITIES FOUND: 2
+🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯🎯
+
+⭐ BEST OPPORTUNITY:
 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 
 ARBITRAGE OPPORTUNITY DETECTED!
-Buy XLM on binance at $0.124800, sell on kraken at $0.125200
-Profit: 0.52% (~$0.40)
+Buy XRP on binance at $2.135800, sell on kraken at $2.142200
+Profit: 0.30% (~$0.30)
 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 🚨 
 
-[DRY RUN] Would place buy order: 801.2820 XLM on binance
-[DRY RUN] Would place sell order: 801.2820 XLM on kraken
+[DRY RUN] Would place buy order: 46.8304 XRP on binance
+[DRY RUN] Would place sell order: 46.8304 XRP on kraken
 ✓ Arbitrage executed successfully!
-✓ Estimated profit: $0.40
+✓ Estimated profit: $0.30
 
-Statistics: Opportunities Found: 1 | Executed: 1
+📊 Other opportunities found: 1
+  - Buy XLM on binance at $0.124800, sell on kraken at $0.125200
+    Profit: 0.52% (~$0.40)
+
+📈 Statistics: Opportunities Found: 2 | Executed: 1
 ```
 
 ## 📁 Project Structure
@@ -197,11 +215,12 @@ arbitrage_bot/
 
 ## 🔍 How It Works
 
-1. **Price Monitoring**: Fetches current prices from Binance.US and Kraken
-2. **Opportunity Detection**: Compares prices to find profitable spreads
-3. **Profitability Check**: Ensures profit exceeds minimum threshold after fees
-4. **Trade Execution**: Places simultaneous buy and sell orders
-5. **Logging**: Records all activities for analysis
+1. **Multi-Coin Monitoring**: Fetches current prices for XLM and XRP from Binance.US and Kraken
+2. **Opportunity Detection**: Compares prices to find profitable spreads across all pairs
+3. **Smart Ranking**: Sorts opportunities by profitability to execute the best trade first
+4. **Profitability Check**: Ensures profit exceeds minimum threshold after fees
+5. **Trade Execution**: Places simultaneous buy and sell orders
+6. **Logging**: Records all activities for analysis
 
 ### Arbitrage Logic
 

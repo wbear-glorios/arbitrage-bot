@@ -1,5 +1,5 @@
-XLM ARBITRAGE BOT - QUICK SETUP GUIDE
-======================================
+CRYPTO ARBITRAGE BOT (XLM + XRP) - QUICK SETUP GUIDE
+====================================================
 
 STEP 1: Install Dependencies
 -----------------------------

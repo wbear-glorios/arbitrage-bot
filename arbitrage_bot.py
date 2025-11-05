@@ -31,7 +31,7 @@ class ArbitrageBot:
     def _initialize(self):
         """Initialize the bot"""
         self.logger.info("=" * 60)
-        self.logger.info("XLM Arbitrage Bot Initializing...")
+        self.logger.info("Crypto Arbitrage Bot Initializing...")
         self.logger.info("=" * 60)
         
         # Validate configuration
@@ -42,7 +42,7 @@ class ArbitrageBot:
             sys.exit(1)
         
         # Display configuration
-        self.logger.info(f"Symbol: {Config.SYMBOL}")
+        self.logger.info(f"Symbols: {', '.join(Config.SYMBOLS)}")
         self.logger.info(f"Quote Currencies: {', '.join(Config.QUOTE_CURRENCIES)}")
         self.logger.info(f"Min Profit: {Config.MIN_PROFIT_PERCENTAGE}%")
         self.logger.info(f"Trade Amount: ${Config.TRADE_AMOUNT_USD}")
@@ -80,9 +80,12 @@ class ArbitrageBot:
         
         self.logger.info(f"✓ Successfully connected to {len(self.exchanges)} exchanges\n")
     
-    def fetch_prices(self) -> Dict[str, Dict]:
+    def fetch_prices(self, symbol: str) -> Dict[str, Dict]:
         """
-        Fetch current prices from all exchanges
+        Fetch current prices from all exchanges for a specific symbol
+        
+        Args:
+            symbol: The cryptocurrency symbol (e.g., 'XLM', 'XRP')
         
         Returns:
             Dictionary mapping exchange names to ticker data
@@ -92,22 +95,20 @@ class ArbitrageBot:
         for exchange_name, client in self.exchanges.items():
             # Try each quote currency until we find one that works
             for quote in Config.QUOTE_CURRENCIES:
-                ticker = client.get_ticker(Config.SYMBOL, quote)
+                ticker = client.get_ticker(symbol, quote)
                 if ticker:
                     tickers[exchange_name] = ticker
                     break
             
             if exchange_name not in tickers:
-                self.logger.warning(f"Could not fetch price from {exchange_name}")
+                self.logger.warning(f"Could not fetch {symbol} price from {exchange_name}")
                 tickers[exchange_name] = None
         
         return tickers
     
-    def display_prices(self, tickers: Dict[str, Dict]):
+    def display_prices(self, symbol: str, tickers: Dict[str, Dict]):
         """Display current prices in a formatted way"""
-        self.logger.info("\n" + "─" * 60)
-        self.logger.info(f"Iteration #{self.iteration_count} | {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-        self.logger.info("─" * 60)
+        self.logger.info(f"\n{'─' * 15} {symbol} {'─' * 15}")
         
         for exchange_name, ticker in tickers.items():
             if ticker:
@@ -186,35 +187,57 @@ class ArbitrageBot:
         """Run one iteration of the bot"""
         self.iteration_count += 1
         
-        # Fetch prices from all exchanges
-        tickers = self.fetch_prices()
+        self.logger.info("\n" + "═" * 60)
+        self.logger.info(f"Iteration #{self.iteration_count} | {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+        self.logger.info("═" * 60)
         
-        # Display current prices
-        self.display_prices(tickers)
+        all_opportunities = []
         
-        # Find arbitrage opportunities
-        opportunities = self.detector.find_opportunities(tickers)
+        # Check each symbol
+        for symbol in Config.SYMBOLS:
+            # Fetch prices from all exchanges
+            tickers = self.fetch_prices(symbol)
+            
+            # Display current prices
+            self.display_prices(symbol, tickers)
+            
+            # Find arbitrage opportunities
+            opportunities = self.detector.find_opportunities(tickers)
+            
+            if opportunities:
+                all_opportunities.extend(opportunities)
+                self.logger.info(f"✓ Found {len(opportunities)} opportunity(ies) for {symbol}")
+            else:
+                self.logger.info(f"○ No opportunities for {symbol}")
         
-        if opportunities:
+        # Process all opportunities across all symbols
+        if all_opportunities:
             # Sort by profit percentage (descending)
-            opportunities.sort(key=lambda x: x.profit_percentage, reverse=True)
+            all_opportunities.sort(key=lambda x: x.profit_percentage, reverse=True)
+            
+            self.logger.info(f"\n{'🎯' * 20}")
+            self.logger.info(f"TOTAL OPPORTUNITIES FOUND: {len(all_opportunities)}")
+            self.logger.info(f"{'🎯' * 20}")
             
             # Execute the best opportunity
-            best_opportunity = opportunities[0]
+            best_opportunity = all_opportunities[0]
+            self.logger.info(f"\n⭐ BEST OPPORTUNITY:")
             self.execute_arbitrage(best_opportunity)
             
             # Show other opportunities if any
-            if len(opportunities) > 1:
-                self.logger.info(f"\nOther opportunities found: {len(opportunities) - 1}")
-                for opp in opportunities[1:]:
+            if len(all_opportunities) > 1:
+                self.logger.info(f"\n📊 Other opportunities found: {len(all_opportunities) - 1}")
+                for opp in all_opportunities[1:3]:  # Show top 3 only
                     self.logger.info(f"  - {opp}")
+                if len(all_opportunities) > 3:
+                    self.logger.info(f"  ... and {len(all_opportunities) - 3} more")
         else:
-            self.logger.info("No arbitrage opportunities found")
+            self.logger.info(f"\n○ No arbitrage opportunities found this iteration")
         
         # Display statistics
         stats = self.detector.get_statistics()
         self.logger.info(
-            f"\nStatistics: "
+            f"\n📈 Statistics: "
             f"Opportunities Found: {stats['opportunities_found']} | "
             f"Executed: {stats['opportunities_executed']}"
         )
